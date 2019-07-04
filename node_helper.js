@@ -56,6 +56,7 @@ module.exports = NodeHelper.create({
             //Good response
             var resp = JSON.parse(body);
             resp.instanceId = payload.instanceId;
+            //console.log("Dark Sky Weather Data: "+JSON.stringify(resp));
             self.sendSocketNotification("DARK_SKY_FORECAST_DATA", resp);
 
           } else {

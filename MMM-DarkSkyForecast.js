@@ -5,7 +5,7 @@
   https://github.com/jclarke0000/MMM-DarkSkyForecast
 
   Icons in use by this module:
-  
+
   Skycons - Animated icon set by Dark Sky
   http://darkskyapp.github.io/skycons/
   (using the fork created by Maxime Warner
@@ -85,7 +85,8 @@ Module.register("MMM-DarkSkyForecast", {
     label_timeFormat: "h a",
     label_days: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
     label_ordinals: ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"],
-    moduleTimestampIdPrefix: "DARK_SKY_TIMESTAMP_"
+    moduleTimestampIdPrefix: "DARK_SKY_TIMESTAMP_",
+    showWeatherBoy: true
   },
 
   validUnits: ["ca","si","uk2","us"],
@@ -105,7 +106,7 @@ Module.register("MMM-DarkSkyForecast", {
 
   /*
     Data object provided to the Nunjucks template. The template does not
-    do any data minipulation; the strings provided here are displayed as-is.
+    do any data manipulation; the strings provided here are displayed as-is.
     The only logic in the template are conditional blocks that determine if
     a certain section should be displayed, and simple loops for the hourly
     and daily forecast.
@@ -145,7 +146,7 @@ Module.register("MMM-DarkSkyForecast", {
     /*
       Optionally, Dark Sky's Skycons animated icon
       set can be used.  If so, it is drawn to the DOM
-      and animated on demand as opposed to being 
+      and animated on demand as opposed to being
       contained in animated images such as GIFs or SVGs.
       This initializes the colours for the icons to use.
      */
@@ -154,7 +155,7 @@ Module.register("MMM-DarkSkyForecast", {
         "monochrome": false,
         "colors" : {
           "main" : "#FFFFFF",
-          "moon" : this.config.colored ? "#FFFDC2" : "#FFFFFF", 
+          "moon" : this.config.colored ? "#FFFDC2" : "#FFFFFF",
           "fog" : "#FFFFFF",
           "fogbank" : "#FFFFFF",
           "cloud" : this.config.colored ? "#BEBEBE" : "#999999",
@@ -169,10 +170,10 @@ Module.register("MMM-DarkSkyForecast", {
     //sanitize optional parameters
     if (this.validUnits.indexOf(this.config.units) == -1) {
       this.config.units = "ca";
-    } 
+    }
     if (this.validLayouts.indexOf(this.config.forecastLayout) == -1) {
       this.config.forecastLayout = "tiled";
-    } 
+    }
     if (this.iconsets[this.config.iconset] == null) {
       this.config.iconset = "1c";
     }
@@ -192,7 +193,7 @@ Module.register("MMM-DarkSkyForecast", {
 
     //force icon set to mono version whern config.coloured = false
     if (this.config.colored == false) {
-      this.config.iconset = this.config.iconset.replace("c","m");      
+      this.config.iconset = this.config.iconset.replace("c","m");
     }
 
     //start data poll
@@ -207,7 +208,6 @@ Module.register("MMM-DarkSkyForecast", {
       }, self.config.updateInterval * 60 * 1000); //convert to milliseconds
 
     }, this.config.requestDelay);
-    
 
   },
 
@@ -244,6 +244,43 @@ Module.register("MMM-DarkSkyForecast", {
       this.sendNotification("DARK_SKY_FORECAST_WEATHER_UPDATE", payload);
 
       /*
+       adjust the weatherboy sprite to the right picture using forecast data
+      */
+      var wb = document.getElementById("weatherboy");
+      if (wb != null) {
+        var posX, posY;
+        switch (this.weatherData.currently.summary.icon) {
+          case "clear-day":
+            posY = 40;
+            break;
+          case "rain":
+            posY = 40+(wb.style.height*2);
+            break;
+          default:
+            posY = 40+(wb.style.height*1);
+            console.log("Weather icon: "+this.weatherData.currently.summary.icon);
+        }
+
+        var temp = this.weatherData.currently.temperature;
+
+        if (temp < 0) {
+          posX = wb.style.width * 4;
+        } else if (temp < 10) {
+          posX = wb.style.width * 3;
+        } else if (temp < 20) {
+          posX = wb.style.width * 2;
+        } else if (temp < 26) {
+          posX = wb.style.width;
+        } else {
+          posX = 0;
+        }
+
+        wb.style.backgroundPosition = "${posX} ${posY}";
+      }
+
+
+
+      /*
         Start icon playback. We need to wait until the DOM update
         is complete before drawing and starting the icons.
 
@@ -260,7 +297,7 @@ Module.register("MMM-DarkSkyForecast", {
             self.playIcons(self);
           }
         }, 100);
-      } 
+      }
 
     }
 
@@ -315,7 +352,6 @@ Module.register("MMM-DarkSkyForecast", {
 
     }
 
-
     return {
       "currently" : {
         temperature: Math.round(this.weatherData.currently.temperature) + "°",
@@ -331,7 +367,7 @@ Module.register("MMM-DarkSkyForecast", {
       "hourly" : hourlies,
       "daily" : dailies,
     };
-  },  
+  },
 
 
   /*
@@ -423,7 +459,7 @@ Module.register("MMM-DarkSkyForecast", {
     var windGust = null;
     if (!this.config.concise && gust) {
       windGust = " (" + this.config.label_maximum + " " + Math.round(gust) + " " + this.getUnit("windSpeed") + ")";
-    }    
+    }
 
     return {
       windSpeed: Math.round(speed) + " " + this.getUnit("windSpeed") + (!this.config.concise ? " " + this.getOrdinal(bearing) : ""),
@@ -491,7 +527,7 @@ Module.register("MMM-DarkSkyForecast", {
       snow
       wind
 
-    All of the icon sets below support these ten plus an 
+    All of the icon sets below support these ten plus an
     additional three in anticipation of Dark Sky enabling
     a few more:
 

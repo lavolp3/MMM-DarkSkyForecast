@@ -255,4 +255,23 @@
 }
 
 
+/* ------------ Weatherboy ------------ */
+
+.MMM-DarkSkyForecast .wb-container {
+  display: block;
+  text-aling: center;
+}
+
+.MMM-DarkSkyForecast #weatherboy {
+  margin: auto auto;
+  width: 205px;
+  height: 340px;
+  background: url(weatherboy.jpg);
+  background-size: 1028px 1060px;
+  background-repeat: no-repeat;
+  background-position: 0px -40px;
+  overflow: hidden;
+  -webkit-filter: invert(1);
+  filter: invert(1);
+}
 
