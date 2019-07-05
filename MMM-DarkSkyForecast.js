@@ -86,7 +86,8 @@ Module.register("MMM-DarkSkyForecast", {
     label_days: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
     label_ordinals: ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"],
     moduleTimestampIdPrefix: "DARK_SKY_TIMESTAMP_",
-    showWeatherBoy: true
+    showWeatherBoy: true,
+    wbHeight: 340;
   },
 
   validUnits: ["ca","si","uk2","us"],
@@ -129,8 +130,8 @@ Module.register("MMM-DarkSkyForecast", {
       },
       moduleTimestampIdPrefix: this.config.moduleTimestampIdPrefix,
       identifier: this.identifier,
-      timeStamp: this.dataRefreshTimeStamp
-
+      timeStamp: this.dataRefreshTimeStamp,
+      wbSpritePos: this.getSpritePos(this.weatherData.currently.temperature, this.weatherData.currently.icon)
     };
   },
 
@@ -246,37 +247,8 @@ Module.register("MMM-DarkSkyForecast", {
       /*
        adjust the weatherboy sprite to the right picture using forecast data
       */
-      var wb = document.getElementById("weatherboy");
-      if (wb != null) {
-        var posX, posY;
-        switch (this.weatherData.currently.summary.icon) {
-          case "clear-day":
-            posY = 40;
-            break;
-          case "rain":
-            posY = 40+(wb.style.height*2);
-            break;
-          default:
-            posY = 40+(wb.style.height*1);
-            console.log("Weather icon: "+this.weatherData.currently.summary.icon);
-        }
-
-        var temp = this.weatherData.currently.temperature;
-
-        if (temp < 0) {
-          posX = wb.style.width * 4;
-        } else if (temp < 10) {
-          posX = wb.style.width * 3;
-        } else if (temp < 20) {
-          posX = wb.style.width * 2;
-        } else if (temp < 26) {
-          posX = wb.style.width;
-        } else {
-          posX = 0;
-        }
-
-        wb.style.backgroundPosition = "${posX} ${posY}";
-      }
+      //var wb = document.getElementById("weatherboy");
+      
 
 
 
@@ -369,6 +341,36 @@ Module.register("MMM-DarkSkyForecast", {
     };
   },
 
+  getSpritePos: function(temp, icon) {
+      var posX, posY;
+      let wbY = this.config.wbHeight;
+      let wbX = this.config.wbHeight * 0.6;
+      switch (icon) {
+          case "clear-day":
+            posY = -(wbY * 0.115);
+            break;
+          case "rain":
+            posY = -(wbY * 2.115);
+            break;
+          default:
+            posY = -(wbY * 1.115);
+            console.log("Weather icon: "+icon);
+        }
+
+        if (temp < 0) {
+          posX = -(wbX * 4);
+        } else if (temp < 10) {
+          posX = -(wbX * 3);
+        } else if (temp < 20) {
+          posX = -(wbX * 2);
+        } else if (temp < 26) {
+          posX = -wbX;
+        } else {
+          posX = 0;
+        }
+
+        return("background-position: ${posX} ${posY}");
+  };
 
   /*
     Hourly and Daily forecast items are very similar.  So one routine builds the data
