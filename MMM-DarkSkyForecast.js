@@ -86,8 +86,9 @@ Module.register("MMM-DarkSkyForecast", {
     label_days: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
     label_ordinals: ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"],
     moduleTimestampIdPrefix: "DARK_SKY_TIMESTAMP_",
-    showWeatherBoy: true,
-    wbHeight: 340;
+    showWeatherBoy: false,
+    wbHeight: 340,
+    wbSpriteWidth: 1440,
   },
 
   validUnits: ["ca","si","uk2","us"],
@@ -244,13 +245,6 @@ Module.register("MMM-DarkSkyForecast", {
       //broadcast weather update
       this.sendNotification("DARK_SKY_FORECAST_WEATHER_UPDATE", payload);
 
-      /*
-       adjust the weatherboy sprite to the right picture using forecast data
-      */
-      //var wb = document.getElementById("weatherboy");
-      
-
-
 
       /*
         Start icon playback. We need to wait until the DOM update
@@ -343,8 +337,8 @@ Module.register("MMM-DarkSkyForecast", {
 
   getSpritePos: function(temp, icon) {
       var posX, posY;
-      let wbY = this.config.wbHeight;
-      let wbX = this.config.wbHeight * 0.6;
+      var wbY = this.config.wbHeight;
+      var wbX = this.config.wbHeight * 0.6;
       switch (icon) {
           case "clear-day":
             posY = -(wbY * 0.115);
@@ -358,19 +352,23 @@ Module.register("MMM-DarkSkyForecast", {
         }
 
         if (temp < 0) {
-          posX = -(wbX * 4);
+          posX = -(wbX * 6);
+        } else if (temp < 6) {
+          posX = -(wbX * 5);
         } else if (temp < 10) {
+          posX = -(wbX * 4);
+        } else if (temp < 18) {
           posX = -(wbX * 3);
-        } else if (temp < 20) {
+        } else if (temp < 25) {
           posX = -(wbX * 2);
-        } else if (temp < 26) {
+        } else if (temp < 30) {
           posX = -wbX;
         } else {
           posX = 0;
         }
 
         return("background-position: ${posX} ${posY}");
-  };
+  },
 
   /*
     Hourly and Daily forecast items are very similar.  So one routine builds the data

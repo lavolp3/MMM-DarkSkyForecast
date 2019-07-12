@@ -30,14 +30,14 @@
         </span>
 
         {% if config.showPrecipitation %}
-          
+
           <span class="precipitation-container">
             {% if (config.showInlineIcons) %}
               <img class="inline-icon rain" src="{{ inlineIcons.rain }}" />
             {% endif %}
 
             <span class="pop">{{ forecast.currently.precipitation.pop }}</span>
-            
+
             {% if forecast.currently.precipitation.accumulation %}
               <span class="pop">{{ forecast.currently.precipitation.accumulation }}</span>
             {% endif %}
@@ -52,7 +52,7 @@
             {% endif %}
 
             <span class="wind-speed">{{ forecast.currently.wind.windSpeed }}</span>
-            
+
             {% if forecast.currently.wind.windGust %}
               <span class="wind-gusts">{{ forecast.currently.wind.windGust }}</span>
             {% endif %}
@@ -120,14 +120,14 @@
 
 
               {% if config.showPrecipitation %}
-      
+
                 <span class="precipitation-container">
                   {% if (config.showInlineIcons and config.forecastLayout == "tiled" ) %}
                     <img class="inline-icon rain" src="{{ inlineIcons.rain }}" />
                   {% endif %}
 
                   <span class="pop">{{ h.precipitation.pop }}</span>
-                  
+
                   {% if h.precipitation.accumulation %}
                     <span class="pop">{{ h.precipitation.accumulation }}</span>
                   {% endif %}
@@ -142,7 +142,7 @@
                   {% endif %}
 
                   <span class="wind-speed">{{ h.wind.windSpeed }}</span>
-                  
+
                   {% if h.wind.windGust %}
                     <span class="wind-gusts">{{ h.wind.windGust }}</span>
                   {% endif %}
@@ -179,14 +179,14 @@
 
 
               {% if config.showPrecipitation %}
-      
+
                 <span class="precipitation-container">
                   {% if (config.showInlineIcons and config.forecastLayout == "tiled" ) %}
                     <img class="inline-icon rain" src="{{ inlineIcons.rain }}" />
                   {% endif %}
 
                   <span class="pop">{{ d.precipitation.pop }}</span>
-                  
+
                   {% if d.precipitation.accumulation %}
                     <span class="pop">{{ d.precipitation.accumulation }}</span>
                   {% endif %}
@@ -201,7 +201,7 @@
                   {% endif %}
 
                   <span class="wind-speed">{{ d.wind.windSpeed }}</span>
-                  
+
                   {% if d.wind.windGust %}
                     <span class="wind-gusts">{{ d.wind.windGust }}</span>
                   {% endif %}
@@ -216,12 +216,12 @@
         {% endif %}
 
       </div>
-    {% endif %}      
+    {% endif %}
 
     {# -------------- Weatherboy -------------- #}
     {% if config.showWeatherBoy %}
       <div class="wb-container">
-        <div id="weatherboy" style="{{ wbSpritePos }}">      
+        <div id="weatherboy" style="background-size: {{ config.wbSpriteWidth }} auto; {{ wbSpritePos }}">
         </div>
       </div>
     {% endif %}
